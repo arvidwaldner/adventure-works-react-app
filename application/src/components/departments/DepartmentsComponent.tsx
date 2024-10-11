@@ -4,7 +4,7 @@ import { Container, Image, Row, Col, Card, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { slideInDown, fadeInDown } from "react-animations";
 import DepartmentComponent from './DepartmentComponent';
-import axios from "axios";
+import axios from 'axios';
 
 interface Department {
     departmentId: number,
@@ -15,12 +15,15 @@ interface Department {
 
 const DepartmentsComponent: React.FC= () => {
 
+    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const departmentsUrl = apiBaseUrl + 'human-resources/departments'
+    
     const [departments, setDepartments] = useState<Department[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        axios.get('secret')
+        axios.get(departmentsUrl)
             .then((response) => {
                 setDepartments(response.data as Department[]);
                 setLoading(false);
@@ -30,7 +33,7 @@ const DepartmentsComponent: React.FC= () => {
                 setLoading(false);
             });
 
-    }, []);
+    }, [departmentsUrl]);
 
     if (loading) {
         return <div>Loading...</div>;
