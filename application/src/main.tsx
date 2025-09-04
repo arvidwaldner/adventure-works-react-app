@@ -5,7 +5,6 @@ import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <div className="bg-red-500 text-white p-4">Tailwind works!</div>
-    <App />
+    <App />    
   </StrictMode>,
 )
