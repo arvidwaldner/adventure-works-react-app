@@ -12,7 +12,7 @@ function App() {
     <>
       <Navbar />
       <ToastContainer />      
-      <Departments />
+      <Departments />      
     </>
   )
 }

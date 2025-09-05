@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import axios from 'axios';
 import DepartmentDetails from "./DepartmentDetailsComponent";
 import AddDepartmentModal from "./AddDepartmentModalComponent";
@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowsRotate, faPlusCircle} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import DeleteDepartmentModal from "./DeleteDepartmentModalComponent";
+import EditDepartmentModal from "./EditDepartmentModalComponent";
 
 interface Department {
     departmentId: number,
@@ -27,9 +29,15 @@ const Departments = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{ departmentId: number; departmentName: string } | null>(null);
   
-  const successToast = () => toast.success("Succesfully added new department.");
-  const failureToast = () => toast.error("Failed to add new department.");
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [pendingEdit, setPendingEdit] = useState<{ departmentId: number; departmentName: string; groupName: string } | null>(null);
+
+
+  const successToast = (message: string) => toast.success(message);
+  const failureToast = (message: string) => toast.error(message);
 
   const fetchDepartments = async () => {
     setShowLoadingSpinner(true);
@@ -38,7 +46,7 @@ const Departments = () => {
       setDepartments(response.data as Department[]);
     } catch (e: any) {
       setError(e?.message ?? "Network error");      
-      failureToast();
+      failureToast("Failed to fetch departments: " + (e?.message ?? "Network error"));
     } finally {
       setTimeout(() => setShowLoadingSpinner(false), 500);
     }
@@ -48,8 +56,8 @@ const Departments = () => {
     if(didFetch.current) return;
     didFetch.current = true;
     fetchDepartments();
-  }, []);  
-
+  }, []); 
+  
   const handleAddSubmit = async (form: { departmentName: string; groupName: string }) => {
     setSubmitting(true);
     setShowLoadingSpinner(true);
@@ -61,23 +69,92 @@ const Departments = () => {
       
       if(response.status === 201) {
         setIsAddOpen(false);
-        successToast();
+        successToast(`Successfully added new department: ${form.departmentName}`);
         await fetchDepartments();
       } else {
-        setError(`Failed to add department: ${response.statusText}`);
-        failureToast();
+        setError(`Failed to add department: '${form.departmentName}' - ${response.statusText}`);
+        failureToast(`Failed to add department: '${form.departmentName}' - ${response.statusText}`);
       }      
     } catch (e: any) {
       setError(e?.message ?? "Network error");
-      failureToast();
+      failureToast(`Failed to add department: '${form.departmentName}' - ${e?.message ?? "Network error"}`);
     } finally {
         setSubmitting(false);
-        setTimeout(() => setShowLoadingSpinner(false), 500);
+        setTimeout(() => setShowLoadingSpinner(false), 1500);
     } 
-  }  
+  }
 
-  if (error) {
-      return <div>Error: {error}</div>;
+  const handleEditClick = (departmentId: number, departmentName: string, groupName: string) => {
+    setPendingEdit({ departmentId, departmentName, groupName });
+    setEditModalOpen(true);    
+  }
+
+  const handleConfirmEdit = async (departmentName: string, groupName: string) => {
+    if(pendingEdit) {
+      await handleEdit(pendingEdit.departmentId, departmentName, groupName);
+      setEditModalOpen(false);
+      setPendingEdit(null);
+    }
+  }
+
+  const handleEditCancel = () => {
+    setEditModalOpen(false);
+    setPendingEdit(null);
+  }
+
+  const handleDeleteClick = (departmentId: number, departmentName: string) => {
+    setPendingDelete({ departmentId, departmentName });
+    setDeleteModalOpen(true); 
+  }
+
+  const handleConfirmDelete = async () => {
+    if(pendingDelete) {
+      await handleDelete(pendingDelete.departmentId, pendingDelete.departmentName);
+      setDeleteModalOpen(false);
+      setPendingDelete(null);
+    }
+  }
+
+  const handleCancelDelete = () => {
+    setDeleteModalOpen(false);
+    setPendingDelete(null);
+  }
+  
+  const handleDelete = async (departmentId: number, departmentName: string) => {
+    setSubmitting(true);
+    setShowLoadingSpinner(true);
+    try{
+      await axios.delete(`${departmentsUrl}/${departmentId}`);
+      successToast(`Successfully removed department: ${departmentName}`);
+      await fetchDepartments();
+    } catch (e: any) {
+      setError(e?.message ?? "Network error");
+      failureToast(`Failed to remove department: ${departmentName} - ${e?.message ?? "Network error"}`);
+    } finally {
+      setSubmitting(false);
+      setTimeout(() => setShowLoadingSpinner(false), 1500);
+    }
+  }
+  
+  const handleEdit = async (departmentId: number, departmentName: string, groupName: string) => {
+    if (!pendingEdit) return;
+    
+    setSubmitting(true);
+    setShowLoadingSpinner(true);
+    try{
+      await axios.put(`${departmentsUrl}/${departmentId}`, {
+        name: departmentName,
+        groupName: groupName
+      });
+      successToast(`Successfully updated existing department`);
+      await fetchDepartments();
+    } catch (e: any) {
+      setError(e?.message ?? "Network error");
+      failureToast(`Failed to update existing department - ${e?.message ?? "Network error"}`);
+    } finally {
+      setSubmitting(false);
+      setTimeout(() => setShowLoadingSpinner(false), 1500);
+    }
   }
 
   return (
@@ -121,12 +198,16 @@ const Departments = () => {
                 name={d.name}
                 groupName={d.groupName}
                 modifiedDate={d.modifiedDate}
+                rowNumber={departments.indexOf(d) + 1}
+                onDeleteClick={handleDeleteClick}
+                onEditClick={handleEditClick}
               />
             ))}
           </tbody>
         </table>      
       </div>
-    </div>    
+    </div>
+
     <AddDepartmentModal
       isOpen={isAddOpen}
       onClose={() => setIsAddOpen(false)}
@@ -135,6 +216,21 @@ const Departments = () => {
         setIsAddOpen(false);
       }}
       submitting={submitting}
+    />
+
+    <EditDepartmentModal 
+      isOpen={editModalOpen}
+      onClose={handleEditCancel}
+      onConfirmEdit={handleConfirmEdit}      
+      departmentName={pendingEdit ? pendingEdit.departmentName : ""}
+      groupName={pendingEdit ? pendingEdit.groupName : ""}
+    />
+
+    <DeleteDepartmentModal
+      isOpen={deleteModalOpen}
+      onCancelDelete={handleCancelDelete}
+      onConfirmDelete={handleConfirmDelete}
+      departmentName={pendingDelete ? pendingDelete.departmentName : ""}
     />
     </>
   );
