@@ -1,18 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import Departments from './departments/DepartmentsComponent'
 import Navbar from './NavbarComponent'
 import { ToastContainer, toast } from "react-toastify";
+import { Link, Route, Switch } from "wouter";
+import Home from './HomeComponent';
+import Departments from './departments/DepartmentsComponent';
 
 function App() {
   
   return (
     <>
-      <Navbar />
-      <ToastContainer />      
-      <Departments />      
+        <Navbar />
+        <Switch>
+            <Route path="/" component={Home} />
+            <Route path="/departments" component={Departments} />
+            <Route path="#" />
+            <Route path="#" />
+            <Route path="#" />
+            <Route path="#" />
+        </Switch>
+        <ToastContainer />      
     </>
   )
 }
