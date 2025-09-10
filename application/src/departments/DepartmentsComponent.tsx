@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import DeleteDepartmentModal from "./DeleteDepartmentModalComponent";
 import EditDepartmentModal from "./EditDepartmentModalComponent";
+import { successToast, failureToast } from "../utils/toastUtils";
 
 interface Department {
     departmentId: number,
@@ -34,10 +35,6 @@ const Departments = () => {
   
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [pendingEdit, setPendingEdit] = useState<{ departmentId: number; departmentName: string; groupName: string } | null>(null);
-
-
-  const successToast = (message: string) => toast.success(message);
-  const failureToast = (message: string) => toast.error(message);
 
   const fetchDepartments = async () => {
     setShowLoadingSpinner(true);

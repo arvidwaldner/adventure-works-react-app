@@ -4,6 +4,7 @@ import { Link, Route, Switch } from "wouter";
 import Home from './HomeComponent';
 import Departments from './departments/DepartmentsComponent';
 import NavigationBar from './NavigationBarComponent';
+import Locations from './locations/LocationsComponent';
 
 function App() {
   
@@ -14,6 +15,7 @@ function App() {
             <Switch>
               <Route path="/" component={Home} />
               <Route path="/departments" component={Departments} />
+              <Route path="/locations" component={Locations} />
             </Switch>
           </div>
           <ToastContainer />      
