@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faTrashCan} from "@fortawesome/free-solid-svg-icons";
+import Button from "react-bootstrap/esm/Button";
 
 interface DepartmentProps {
   departmentId: number;
@@ -23,24 +24,24 @@ const DepartmentDetails: React.FC<DepartmentProps> = ({
 }) => {
 
   return (
-    <tr className="hover:bg-gray-50">
-      <td className="border border-gray-300 px-4 py-2">{rowNumber}</td>
+    <tr>
+      <td>{rowNumber}</td>
       <td className="border border-gray-300 px-4 py-2">{name}</td>
-      <td className="border border-gray-300 px-4 py-2">{groupName}</td>
-      <td className="border border-gray-300 px-4 py-2">{modifiedDate}</td>
-      <td className="border border-gray-300 px-4 py-2">
-        <button className="border border-blue-500 text-blue-500 bg-white hover:bg-blue-500 hover:text-yellow focus:border-blue-500 focus:outline-none transition-colors duration-200"
+      <td>{groupName}</td>
+      <td>{modifiedDate}</td>
+      <td>
+        <Button variant="btn btn-outline-secondary" 
           title={`Edit department: ${name}`}
           onClick={() => onEditClick(departmentId, name, groupName)}>
           <FontAwesomeIcon icon={faPen} />
-        </button>
+        </Button>
       </td>
       <td className="border border-gray-300 px-4 py-2">
-        <button className="border border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-red focus:border-red-500 focus:outline-none transition-colors duration-200"
+        <Button variant="btn btn-outline-danger"
           title={`Remove department: ${name}`}
           onClick={() => onDeleteClick(departmentId, name)}>
           <FontAwesomeIcon icon={faTrashCan} />        
-        </button>         
+        </Button>         
       </td>
     </tr>
   );
