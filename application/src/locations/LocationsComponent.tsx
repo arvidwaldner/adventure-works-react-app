@@ -8,6 +8,7 @@ import LocationDetails from "./LocationDetailsComponent";
 import AddLocationModal from "./AddLocationModalComponent";
 import DeleteLocationModal from "./DeleteLocationModalComponent";
 import EditLocationModal from "./EditLocationModalComponent";
+import Button from "react-bootstrap/esm/Button";
 
 interface Location {
     locationId: number,
@@ -174,29 +175,29 @@ const Locations = () => {
         </div>
       )}
       <div className={showLoadingSpinner ? "blur-sm pointer-events-none select-none" : ""}>
-        <table className="table-auto border-collapse border border-gray-300 w-full text-sm">
-          <thead className="bg-gray-100">
+        <table className="table table-hover table-bordered table-striped">
+          <thead>
             <tr>
-              <th className="border px-4 py-2 text-left" colSpan={5}>Locations (Total: {locations.length})</th>
-              <th className="border px-4 py-2 text-left" colSpan={1}>
-                <button className="px-2 py-1 bg-gray-900 text-black rounded" onClick={fetchAllLocations}>
+              <th scope="col" colSpan={5}>Locations (Total: {locations.length})</th>
+              <th scope="col" colSpan={1}>
+                <Button variant="btn btn-outline-secondary" onClick={fetchAllLocations}>
                   Refresh <FontAwesomeIcon icon={faArrowsRotate} size="lg"/>
-                </button>
+                </Button>
               </th>
-              <th className="border px-4 py-2 text-left" colSpan={1}>
-                <button className="px-2 py-1 bg-gray-900 text-black rounded" onClick={handleAddNewLocationClick}>
+              <th scope="col" colSpan={1}>
+                <Button variant="btn btn-outline-secondary" onClick={handleAddNewLocationClick}>
                   Add new <FontAwesomeIcon icon={faPlusCircle} size="lg" />
-                </button>
+                </Button>
               </th>
             </tr>
             <tr>
-              <th className="border px-4 py-2 text-left">#</th>
-              <th className="border px-4 py-2 text-left">Name</th>
-              <th className="border px-4 py-2 text-left">Cost Rate</th>
-              <th className="border px-4 py-2 text-left">Availability</th>
-              <th className="border px-4 py-2 text-left">ModifiedDate</th>
-              <th className="border px-4 py-2 text-left">Edit</th>
-              <th className="border px-4 py-2 text-left">Remove</th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Cost Rate</th>
+              <th>Availability</th>
+              <th>ModifiedDate</th>
+              <th>Edit</th>
+              <th>Remove</th>
             </tr>
           </thead>
           <tbody>

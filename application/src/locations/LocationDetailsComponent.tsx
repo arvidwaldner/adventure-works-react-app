@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faTrashCan} from "@fortawesome/free-solid-svg-icons";
+import Button from "react-bootstrap/esm/Button";
 
 interface LocationProps {
     locationId: number,
@@ -25,20 +26,20 @@ const LocationDetails: React.FC<LocationProps> = ({
 }) => {
     return (
         <tr>
-            <td className="border px-4 py-2">{rowNumber}</td>
-            <td className="border px-4 py-2">{name}</td>
-            <td className="border px-4 py-2">{costRate}</td>
-            <td className="border px-4 py-2">{availability}</td>
-            <td className="border px-4 py-2">{modifiedDate}</td>
-            <td className="border px-4 py-2">
-                <button onClick={() => onEditClick(locationId, name, costRate, availability)}>
+            <td>{rowNumber}</td>
+            <td>{name}</td>
+            <td>{costRate}</td>
+            <td>{availability}</td>
+            <td>{modifiedDate}</td>
+            <td>
+                <Button variant="btn btn-outline-secondary" onClick={() => onEditClick(locationId, name, costRate, availability)}>
                     <FontAwesomeIcon icon={faPen} />
-                </button>
+                </Button>
             </td>
-            <td className="border px-4 py-2">
-                <button onClick={() => onDeleteClick(locationId, name)}>
+            <td>
+                <Button variant="btn btn-outline-danger" onClick={() => onDeleteClick(locationId, name)}>
                     <FontAwesomeIcon icon={faTrashCan} />
-                </button>
+                </Button>   
             </td>
         </tr>
     );

@@ -6,10 +6,7 @@ import { Navbar, Nav, Container } from 'react-bootstrap';
 const navigation = [
   { name: 'Home', href: '/.', icon: faHome },
   { name: 'Departments', href: '/departments', icon: faUsers },
-  { name: 'Locations', href: '/locations', icon: faLocation },
-  { name: 'Product Categories', href: '/product-categories', icon: faBoxes },
-  { name: 'Products', href: '/products', icon: faBoxOpen },
-  { name: 'Stores', href: '/stores', icon: faStore }
+  { name: 'Locations', href: '/locations', icon: faLocation }
 ]
 
 const NavbarMenu = () => {

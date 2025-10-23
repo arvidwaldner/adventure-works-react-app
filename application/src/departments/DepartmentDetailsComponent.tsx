@@ -26,7 +26,7 @@ const DepartmentDetails: React.FC<DepartmentProps> = ({
   return (
     <tr>
       <td>{rowNumber}</td>
-      <td className="border border-gray-300 px-4 py-2">{name}</td>
+      <td>{name}</td>
       <td>{groupName}</td>
       <td>{modifiedDate}</td>
       <td>
