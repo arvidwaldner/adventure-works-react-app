@@ -11,17 +11,15 @@ function App() {
   
   return (
     <>
+        <NavbarMenu />              
         <Container>
-            <NavbarMenu />              
-            <Container>
-              <Switch>
-                <Route path="/" component={Home} />
-                <Route path="/departments" component={Departments} />
-                <Route path="/locations" component={Locations} />
-              </Switch>
-            </Container>
-        </Container>          
-        <ToastContainer />              
+          <Switch>
+            <Route path="/" component={Home} />
+            <Route path="/departments" component={Departments} />
+            <Route path="/locations" component={Locations} />
+          </Switch>
+        </Container>               
+      <ToastContainer />              
     </>
   )
 }
